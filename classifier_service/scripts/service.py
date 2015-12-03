@@ -10,12 +10,18 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from ras_object_lib.srv import Image_Transfer
 from ras_object_lib.srv import Image_TransferResponse
+from ras_object_lib.srv import Depth_Transfer
+from ras_object_lib.srv import Depth_TransferResponse
+
+from std_msgs.msg import String
+
 from collections import Counter
 import matplotlib.pyplot as plt
 import time
 
-clf = None
 
+clf = None
+clf_material = None
 
 
 ap = argparse.ArgumentParser();
@@ -99,7 +105,15 @@ def shapeCallback(req):
 
 	# plt.savefig(name, bw_img)
 
-	
+
+def depthCallback(req):
+	nan_ratio = float(req.nan_ratio.data)
+	depth = float(req.depth.data)
+
+	x = np.array([nan_ratio, depth])
+	pred = clf_material.predict(x)
+	print pred[0]
+	return Depth_TransferResponse(str(pred[0]))
 
 
 
@@ -123,11 +137,15 @@ def predictClass(predictions):
 
 
 
+
 def flattenImage(image, channels=2):
 	n_rows, n_cols, n_channels = image.shape
 	newimg = image[:,:,:2]
 	# print newimg[0:10]
 	return newimg.reshape((n_rows*n_cols), channels)
+
+
+
 
 def bwImage(image, channels=2):
 	n_rows, n_cols, n_channels = image.shape
@@ -135,6 +153,7 @@ def bwImage(image, channels=2):
 	plt.imshow(newimg) 
 	# print newimg[0:10]
 	return newimg.reshape((n_rows*n_cols), channels)
+
 
 
 def testClassifier(img):
@@ -145,6 +164,8 @@ def testClassifier(img):
 	print preds
 	label = predictClass(preds)
 	print str(classes[label])
+
+
 
 
 #  this is a bit hacky.
@@ -174,6 +195,10 @@ def decisionRules(counts):
 	if counts[4] >= 130 and counts[0] < 800:
 		# return classes[4]
 		return 4
+
+
+	if counts[0] > 600:
+		return 0
 
 
 	if counts[1] >= 500:
@@ -212,10 +237,12 @@ def decisionRules(counts):
 
 
 
+
 if __name__ == '__main__':
 	# model = loadModel('svm_classifier')
 	# clf = joblib.load('svm_classifier.pkl')
 	clf = pickle.load(open("svm_classifier_linear.p","rb"))
+	clf_material = pickle.load(open("svm_clf_material.p", "rb"))
 	# clf = pickle.load(open("svm_classifier_rbf1.p","rb"))
 
 	# image = 
@@ -223,6 +250,7 @@ if __name__ == '__main__':
 
 	rospy.init_node('color_classifier');
 	rospy.Service('/classify_objects/color', Image_Transfer, classifyCallback)
+	rospy.Service('/classify_objects/material', Depth_Transfer, depthCallback)
 	# rospy.Service('/classify_objects/shape', Image_Transfer, shapeCallback)
 	rospy.spin()
 	

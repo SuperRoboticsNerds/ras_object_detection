@@ -3,7 +3,8 @@ import numpy as np
 import os, sys
 import re
 
-
+# step to run the file:
+# python transform_data.py  <file_name.txt> <out_file>  
 
 def readFile(filename):
 	pass
@@ -50,4 +51,5 @@ if __name__ == "__main__":
 	# comb_feat_raw = []
 	# cf = [comb_feat_raw.extend(el) for el in feat_mult] 
 	# print cf[:5]
+
 
