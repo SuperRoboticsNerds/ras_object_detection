@@ -65,6 +65,7 @@ def loadModel(modelname):
 	return clf
 
 
+
 def classifyCallback(req):
 	# print req.im;
 	rosimg = req.im;
@@ -137,13 +138,11 @@ def predictClass(predictions):
 
 
 
-
 def flattenImage(image, channels=2):
 	n_rows, n_cols, n_channels = image.shape
 	newimg = image[:,:,:2]
 	# print newimg[0:10]
 	return newimg.reshape((n_rows*n_cols), channels)
-
 
 
 
@@ -153,6 +152,7 @@ def bwImage(image, channels=2):
 	plt.imshow(newimg) 
 	# print newimg[0:10]
 	return newimg.reshape((n_rows*n_cols), channels)
+
 
 
 
@@ -187,7 +187,7 @@ def decisionRules(counts):
 		return 99
 
 
-	if counts[3] >= 70:
+	if counts[3] >= 90:
 		# return classes[3]
 		return 3
 
@@ -200,6 +200,9 @@ def decisionRules(counts):
 	if counts[0] > 600:
 		return 0
 
+
+	if counts[5] >= 5:
+		return 5 
 
 	if counts[1] >= 500:
 		# return classes[1]

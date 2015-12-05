@@ -47,7 +47,7 @@ def trainClassifier(s, linear = 0):
 
 	else:
 		for train_ind, test_ind in s:
-			cls = svm.SVC(C = 100000, gamma =0.1, kernel='rbf', verbose= False)
+			cls = svm.SVC(C = 100, gamma =10, kernel='rbf', verbose= False)
 			X_train = data_x[train_ind]
 			Y_train = data_y[train_ind]
 			X_test = data_x[test_ind]
@@ -63,10 +63,14 @@ def trainClassifier(s, linear = 0):
 	return cls
 
 
-filesList = ['material_data/hollow_mat.txt', 'material_data/solid_data.txt']
+# filesList = ['material_data/hollow_mat.txt', 'material_data/solid_data.txt']
 
-d1 = np.loadtxt('material_data/hollow_mat.csv', delimiter=',')
-d2 = np.loadtxt('material_data/solid_mat.csv', delimiter=',')
+# d1 = np.loadtxt('material_data/hollow_mat.csv', delimiter=',')
+# d2 = np.loadtxt('material_data/solid_mat.csv', delimiter=',')
+
+d1 = np.loadtxt('material_data/hollowcyl1.csv', delimiter=',')
+d2 = np.loadtxt('material_data/solidcube1.csv', delimiter=',')
+
 # d2 = np.loadtxt('material_data/hollow_mat.txt', delimiter='/t', dtype = 'float32')
 
 # data = map(lambda x: np.loadtxt(x, delimiter='/t', dtype='float32'), filesList)
@@ -79,7 +83,6 @@ d1 = d1[:n_feats]
 d2 = d2[:n_feats]
 
 data_x = np.concatenate((d1, d2), axis = 0)
-
 data_y0 = [0] * n_feats
 data_y1 = [1] * n_feats
 
@@ -89,4 +92,4 @@ s = cross_validation.ShuffleSplit(len(data_y), 3)
 
 clf = trainClassifier(s)
 
-pickle.dump(clf, open("svm_clf_material.p", "wb"))
+pickle.dump(clf, open("svm_clf_material1.p", "wb"))

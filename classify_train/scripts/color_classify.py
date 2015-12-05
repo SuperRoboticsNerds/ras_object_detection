@@ -17,9 +17,14 @@ import matplotlib.pyplot as plt
 # from classify_train.roc_features import flatten_image
 
 
-filesList = ['color_data/green_cube.npz', 'color_data/red_cube.npz',  \
-'color_data/blue_prism.npz', 'color_data/orange_star.npz',  \
- 'color_data/green_light_cube.npz', 'color_data/violet_cross.npz', 'color_data/yellow_cube.npz'] 
+# filesList = ['color_data/green_cube.npz', 'color_data/red_cube.npz',  \
+# 'color_data/blue_prism.npz', 'color_data/orange_star.npz',  \
+#  'color_data/green_light_cube.npz', 'color_data/violet_cross.npz', 'color_data/yellow_cube.npz'] 
+
+
+filesList = ['color_data1/green_cube1.npz', 'color_data1/red_cube1.npz',  'color_data1/blue_tri1.npz',  \
+ 'color_data1/orange_star1.npz',  'color_data1/green_cyl1.npz', 'color_data1/purple_cross1.npz',
+  'color_data1/yellow_cube1.npz'] 
 
 # files = roc_utils.getExtFiles('color_data', '.npz')
 
@@ -79,7 +84,7 @@ def trainClassifier(s, linear = 0):
 
 	else:
 		for train_ind, test_ind in s:
-			cls = svm.SVC(C = 1, gamma =0.1, kernel='rbf', verbose= False)
+			cls = svm.SVC(C = 10, gamma =0.1, kernel='rbf', verbose= False)
 			X_train = data_x[train_ind]
 			Y_train = data_y[train_ind]
 			X_test = data_x[test_ind]
@@ -144,7 +149,7 @@ if __name__ == '__main__':
 	
 	# pickle.dump(cls, open("svm_classifier", "wb"))
 	# pickle.dumps(cls)
-	pickle.dump(clf, open("svm_classifier_rbf1.p", "wb"))
+	pickle.dump(clf, open("svm_classifier_rbf_real1_7.p", "wb"))
 	# clf = pickle.load(open("svm_classifier_linear.p","rb"))
 
 		# joblib.dump(cls, 'svm_classifier.pkl')
