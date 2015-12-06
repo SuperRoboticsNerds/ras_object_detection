@@ -131,7 +131,9 @@ def predictClass(predictions):
 		for i in xrange(diff):
 			bufferlist.append(val)
 		counts = counts.extend(bufferlist)
-	color = decisionRules(counts)
+
+	# color = decisionRules(counts)
+	color = decisionRules1(counts)
 	# print counts
 	# return np.argmax(counts)
 	return color
@@ -173,13 +175,10 @@ def decisionRules(counts):
 
 	# @TODO:investigate blue  
 	# normalize for blue color, i dont know why the classififer is so biased towards blue.
-	if counts[2] > 300:
-		counts[2] = counts[2] - 300
 	print counts
 
 
 	maxVote = max(counts)
-
 
 
 	if maxVote < 200:
@@ -187,12 +186,104 @@ def decisionRules(counts):
 		return 99
 
 
+	if counts[2] >= 400:
+		return 2
+
+
 	if counts[3] >= 90:
 		# return classes[3]
 		return 3
 
 
-	if counts[4] >= 130 and counts[0] < 800:
+	if counts[4] > 400:
+		return 4
+
+
+	if counts[4] >= 130 and counts[0] < 900:
+		# return classes[4]
+		return 4
+
+
+	if counts[0] > 600:
+		return 0
+
+
+	if counts[5] >= 5:
+		return 5 
+
+	if counts[1] >= 500:
+		# return classes[1]
+		return 1
+
+	# treat light green and dark green as the same, as the votes possibly get split among the colors.
+	greenVotes = counts[0] + counts[4]
+
+	# orange and yellow are also similar
+	oryeVotes = counts[3] + counts[6]
+
+
+	if greenVotes > maxVote:
+		if counts[0] >= counts[4]:
+			# return classes[0]
+			return 0
+		else:
+			# return classes[4]
+			return 4
+
+	if oryeVotes > maxVote:
+		if counts[3] >= counts[6]:
+			# return classes[3]
+			return 3
+		else:
+			# return classes[6]
+			return 6
+
+	color = np.argmax(counts)
+	# return classes[color] 
+	return color
+
+
+# rules for the new stronger classifier
+
+def decisionRules1(counts):
+
+	# @TODO:investigate blue  
+	# normalize for blue color, i dont know why the classififer is so biased towards blue.
+	print counts
+
+
+	maxVote = max(counts)
+
+
+	if maxVote < 150:
+		# return "something"
+		return 99
+
+
+
+# put the sensitive ones on the top ....
+
+	if counts[5] >= 150:
+		return 5
+
+
+	if counts[1] >= 180:
+		# return classes[3]
+		return 1
+
+
+	if counts[2] >= 200:
+		return 2
+
+
+	if counts[3] >= 300:
+		return 3
+
+
+	if counts[4] >= 500:
+		return 4
+
+	if counts[4] >= 130 and counts[0] < 1000:
 		# return classes[4]
 		return 4
 
@@ -240,12 +331,17 @@ def decisionRules(counts):
 
 
 
-
 if __name__ == '__main__':
 	# model = loadModel('svm_classifier')
 	# clf = joblib.load('svm_classifier.pkl')
-	clf = pickle.load(open("svm_classifier_linear.p","rb"))
-	clf_material = pickle.load(open("svm_clf_material.p", "rb"))
+	# clf = pickle.load(open("svm_classifier_linear.p","rb"))
+
+	clf = pickle.load(open("svm_classifier_rbf_real1_7.p", "rb"))
+	# clf = pickle.load(open("svm_classifier_linear.p","rb"))
+	# clf = pickle.load(open("svm_classifier_linear.p","rb"))
+
+
+	clf_material = pickle.load(open("svm_clf_material1.p", "rb"))
 	# clf = pickle.load(open("svm_classifier_rbf1.p","rb"))
 
 	# image = 
