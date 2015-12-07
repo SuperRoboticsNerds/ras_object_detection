@@ -251,11 +251,14 @@ def decisionRules1(counts):
 	# normalize for blue color, i dont know why the classififer is so biased towards blue.
 	print counts
 
+	if counts[0] > 150:
+		counts[0] = counts[0] - 150
 
 	maxVote = max(counts)
 
 
-	if maxVote < 150:
+
+	if maxVote < 150 and counts[0] < 100:
 		# return "something"
 		return 99
 
@@ -263,8 +266,15 @@ def decisionRules1(counts):
 
 # put the sensitive ones on the top ....
 
+# 
 	if counts[5] >= 150:
 		return 5
+
+
+	# orange detected well 
+	if counts[3] >= 200:
+		return 3
+
 
 
 	if counts[1] >= 180:
@@ -274,10 +284,6 @@ def decisionRules1(counts):
 
 	if counts[2] >= 200:
 		return 2
-
-
-	if counts[3] >= 300:
-		return 3
 
 
 	if counts[4] >= 500:
@@ -292,7 +298,7 @@ def decisionRules1(counts):
 		return 0
 
 
-	if counts[5] >= 5:
+	if counts[5] >= 30:
 		return 5 
 
 	if counts[1] >= 500:
