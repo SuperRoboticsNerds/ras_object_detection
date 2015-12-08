@@ -253,6 +253,8 @@ def decisionRules(counts):
 	return color
 
 
+
+
 # rules for the new stronger classifier
 
 def decisionRules1(counts):
@@ -276,8 +278,8 @@ def decisionRules1(counts):
 
 # put the sensitive ones on the top ....
 
-# 
-	if counts[5] >= 150:
+# purple is very sensitive
+	if counts[5] >= 80:
 		return 5
 
 
@@ -286,30 +288,30 @@ def decisionRules1(counts):
 		return 3
 
 
-
-	if counts[1] >= 180:
-		# return classes[3]
-		return 1
-
-
-	if counts[2] >= 200:
+	if counts[2] >= 320:
 		return 2
 
 
 	if counts[4] >= 500:
 		return 4
 
-	if counts[4] >= 130 and counts[0] < 1000:
+
+	# yellow
+	if counts[6] >= 250:
+		return 6
+
+			# red is stronger
+	if counts[1] >= 400:
+		# return classes[3]
+		return 1
+
+	if counts[4] >= 120 and counts[0] < 1000:
 		# return classes[4]
 		return 4
 
 
 	if counts[0] > 600:
 		return 0
-
-
-	if counts[5] >= 30:
-		return 5 
 
 	if counts[1] >= 500:
 		# return classes[1]

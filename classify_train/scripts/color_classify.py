@@ -14,19 +14,21 @@ import pickle
 from sklearn.externals import joblib
 import matplotlib.pyplot as plt
 
-# from classify_train.roc_features import flatten_image
-
 
 # filesList = ['color_data/green_cube.npz', 'color_data/red_cube.npz',  \
 # 'color_data/blue_prism.npz', 'color_data/orange_star.npz',  \
 #  'color_data/green_light_cube.npz', 'color_data/violet_cross.npz', 'color_data/yellow_cube.npz'] 
 
 
-filesList = ['color_data1/green_cube1.npz', 'color_data1/red_cube1.npz',  'color_data1/blue_tri1.npz',  \
- 'color_data1/orange_star1.npz',  'color_data1/green_cyl1.npz', 'color_data1/purple_cross1.npz',
-  'color_data1/yellow_cube1.npz'] 
+# filesList = ['color_data1/green_cube1.npz', 'color_data1/red_cube1.npz',  'color_data1/blue_tri1.npz',  \
+#  'color_data1/orange_star1.npz',  'color_data1/green_cyl1.npz', 'color_data1/purple_cross1.npz',
+#   'color_data1/yellow_cube1.npz'] 
 
-# files = roc_utils.getExtFiles('color_data', '.npz')
+
+filesList = ['color_data2/green_cube2.npz', 'color_data2/red_cube2.npz',  'color_data2/blue_tri2.npz',  \
+ 'color_data2/orange_star2.npz',  'color_data2/green_cyl2.npz', 'color_data2/purple_cross2.npz',
+  'color_data2/yellow_cube2.npz'] 
+
 
 clf = None
 
@@ -59,7 +61,7 @@ def subSampleData(dataList):
 	print min_size
 	# norm_data_list = map(lambda x : dropData(x, min_size, 2, 0.50), dataList)	
 
-	norm_data_list = map(lambda x : dropData(x, min_size, 2, 0.95), dataList)	
+	norm_data_list = map(lambda x : dropData(x, min_size, 2, 0.50), dataList)	
 	return norm_data_list
 
 
@@ -99,8 +101,8 @@ def trainClassifier(s, linear = 0):
 			d2 = np.column_stack((d1[0].flat, d1[1].flat))
 
 			all_preds = cls.predict(d2)
-			# pred_reshaped = all_preds.reshape(256, 181)
-			pickle.dump(pred_reshaped, open("look_up_real1.p", "wb"))
+			pred_reshaped = all_preds.reshape(256, 181)
+			pickle.dump(pred_reshaped, open("look_up_real2.p", "wb"))
 				
 			preds = cls.predict(X_test)
 			error_rate = errorRate(preds, Y_test)
@@ -148,17 +150,10 @@ if __name__ == '__main__':
 
 	clf = trainClassifier(s)
 
-		# preds_sp = cls.predict(dd)
-		# for i in xrange(0, C):
-		# 	plt.plot(dd[preds_sp==i,0], dd[preds_sp==i,1], '.')
-		
-		# plt.axis([0, 180, 0, 255])
-		# plt.show()
-
 	
 	# pickle.dump(cls, open("svm_classifier", "wb"))
 	# pickle.dumps(cls)
-	pickle.dump(clf, open("svm_classifier_rbf_real1_7.p", "wb"))
+	pickle.dump(clf, open("svm_classifier_rbf_real2.p", "wb"))
 	# clf = pickle.load(open("svm_classifier_linear.p","rb"))
 
 		# joblib.dump(cls, 'svm_classifier.pkl')
