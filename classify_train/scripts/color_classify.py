@@ -57,7 +57,9 @@ def subSampleData(dataList):
 	sizes = [d.shape[0] for d in dataList]
 	min_size = min(sizes)
 	print min_size
-	norm_data_list = map(lambda x : dropData(x, min_size, 2, 0.50), dataList)	
+	# norm_data_list = map(lambda x : dropData(x, min_size, 2, 0.50), dataList)	
+
+	norm_data_list = map(lambda x : dropData(x, min_size, 2, 0.95), dataList)	
 	return norm_data_list
 
 
@@ -93,6 +95,13 @@ def trainClassifier(s, linear = 0):
 
 			# dd = np.column_stack((gg[0].flat, gg[1].flat))
 
+			d1 = np.meshgrid(xrange(0, 181), xrange(0,256))
+			d2 = np.column_stack((d1[0].flat, d1[1].flat))
+
+			all_preds = cls.predict(d2)
+			# pred_reshaped = all_preds.reshape(256, 181)
+			pickle.dump(pred_reshaped, open("look_up_real1.p", "wb"))
+				
 			preds = cls.predict(X_test)
 			error_rate = errorRate(preds, Y_test)
 			print error_rate
@@ -135,7 +144,7 @@ if __name__ == '__main__':
 	data_y = np.concatenate(labels)
 	print data_x.shape, data_y.shape
 
-	s = cross_validation.ShuffleSplit(len(data_y), 2)
+	s = cross_validation.ShuffleSplit(len(data_y), 1)
 
 	clf = trainClassifier(s)
 

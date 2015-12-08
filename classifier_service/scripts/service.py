@@ -22,6 +22,7 @@ import time
 
 clf = None
 clf_material = None
+lkpt = None
 
 
 ap = argparse.ArgumentParser();
@@ -66,6 +67,12 @@ def loadModel(modelname):
 
 
 
+def loadLkp(lkptname):
+	lkpt = pickle.dumps(lkptname)
+	return lkpt
+
+
+
 def classifyCallback(req):
 	# print req.im;
 	rosimg = req.im;
@@ -80,7 +87,10 @@ def classifyCallback(req):
 	# sample = flattenImage(cv_img)
 	sample = flattenImage(hsv_image, 2)
 
-	preds = clf.predict(sample)
+	# use this if you want to use the classififer iin raw form other wise use look up table
+	# preds = clf.predict(sample)
+
+	preds = lkpt[sample[:,1], sample[:,0]]
 	label = predictClass(preds)
 	return Image_TransferResponse(str(label))
 	# return Image_TransferResponse(str(classes[label]))
@@ -343,6 +353,7 @@ if __name__ == '__main__':
 	# clf = pickle.load(open("svm_classifier_linear.p","rb"))
 
 	clf = pickle.load(open("svm_classifier_rbf_real1_7.p", "rb"))
+	lkpt = pickle.load(open("look_up_real1.p", "rb"))
 	# clf = pickle.load(open("svm_classifier_linear.p","rb"))
 	# clf = pickle.load(open("svm_classifier_linear.p","rb"))
 
